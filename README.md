@@ -1,7 +1,5 @@
-[![Build Status](http://brainard-jenkins.psych.upenn.edu/buildStatus/icon?job=ToolboxToolbox)](http://brainard-jenkins.psych.upenn.edu/job/ToolboxToolbox/)
-
-# ToolboxToolbox 
-Declarative dependency management for Matlab.
+# ToolboxToolbox
+Declarative dependency management for Matlab. 
 
 # Intro 
 The ToolboxToolbox is a declarative dependency management tool for Matlab.
@@ -11,6 +9,8 @@ This means you can write down dependencies for your Matlab projects, in a Matlab
 You can also share your JSON configuration files on the ToolboxHub's [ToolboxRegistry](https://github.com/ToolboxHub/ToolboxRegistry).  This makes it easy to share toolboxes and install them by name.
 
 Here's some more about [what motivated the ToolboxToolbox](https://github.com/ToolboxHub/ToolboxToolbox/wiki/Motivation).
+
+A Matlab Live Script tutorial for the ToolboxToolbox written by Adrian Radillo is available [as html here](https://thegoldlab.github.io/SnowDotsDocumentation/TutorialsDocs/ToolboxToolbox/ToolboxToolboxTutorial.html), with source code [in this github repository](https://github.com/TheGoldLab/Lab_Tutorials/tree/master/SnowDots/ToolboxToolbox).
 
 # Installation
 To install the ToolboxToolbox itself, you have to obtain the code and do a little bit of setup.  The following should work on OS X or Linux:

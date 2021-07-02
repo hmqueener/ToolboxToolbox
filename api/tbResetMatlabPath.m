@@ -38,11 +38,13 @@ function [newPath, oldPath] = tbResetMatlabPath(varargin)
 %
 % 2016 benjamin.heasly@gmail.com
 
+persistentPrefs = tbGetPersistentPrefs;
+
 if 1 == nargin() && ischar(varargin{1})
     % support legacy syntax: tbParsePrefs(reset)
-    prefs = tbParsePrefs('reset', varargin{1});
+    prefs = tbParsePrefs(persistentPrefs, 'reset', varargin{1});
 else
-    prefs = tbParsePrefs(varargin{:});
+    prefs = tbParsePrefs(persistentPrefs, varargin{:});
 end
 
 
@@ -61,6 +63,16 @@ addMatlab = strcmp(prefs.add, 'matlab');
 
 %% Start with Matlab's consistent "factory" path.
 if factoryReset
+    tbDeployedToolboxes({}, 'reset');
+    
+    % This was an attempt to prevent barfing because there
+    % are java objects hanging around somewhere.  Might not
+    % be sufficient. But it also clears the preferences, becasue
+    % these are stored in a persistent variable in a function that
+    % gets cleared. This is dangerous territory.  There might be a way to
+    % do the clear and keep things working, but for now I am backing off.
+    % clear functions
+    
     wid = 'MATLAB:dispatcher:pathWarning';
     oldWarningState = warning('query', wid);
     warning('off', wid);

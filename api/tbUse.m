@@ -17,7 +17,8 @@ function results = tbUse(registered, varargin)
 %
 % 2016 benjamin.heasly@gmail.com
 
-prefs = tbParsePrefs(varargin{:});
+persistentPrefs = tbGetPersistentPrefs;
+prefs = tbParsePrefs(persistentPrefs, varargin{:});
 
 parser = inputParser();
 parser.addRequired('registered', @(r) ischar(r) || iscellstr(r));
@@ -29,4 +30,30 @@ if ischar(registered)
     registered = {registered};
 end
 
-results = tbDeployToolboxes(prefs, 'registered', registered);
+[results, included] = tbDeployToolboxes(persistentPrefs, prefs, 'registered', registered);
+
+% "included" is populated even if "results" is empty due to onlyOnce==true
+cdToFolder(included(1), prefs.cdToFolder)
+
+
+function cdToFolder(result, paramCdToFolder)
+toolboxRoot = tbLocateToolbox(result.name);
+specified = result.cdToFolder;
+switch paramCdToFolder
+    case true
+        fdr = fullfile(toolboxRoot, specified);
+        
+    case false
+        fdr = [];
+        
+    case 'as-specified'
+        if isempty(specified)
+            fdr = [];
+        else
+            fdr = fullfile(toolboxRoot, specified);
+        end
+end
+
+if ~isempty(fdr)
+    cd(fdr)
+end

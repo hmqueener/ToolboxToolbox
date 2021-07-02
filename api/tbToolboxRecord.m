@@ -39,6 +39,12 @@ function record = tbToolboxRecord(varargin)
 %   'append'.
 %   - 'extra' a free-form field for notes, comments, etc., ignored during
 %   deployment
+%   - 'java' relative path to jar files that should be added to the
+%   dynamic java class path. This can be a single string or an array of
+%   strings.
+%   - 'cdToFolder' If set, change working dir to the specified subfolder of
+%                  the toolbox root. If you want to change to the root dir,
+%                  you must specify the current relative folder '.'
 %
 % 2016 benjamin.heasly@gmail.com
 
@@ -58,9 +64,13 @@ parser.addParameter('hook', '', @ischar);
 parser.addParameter('requirementHook', '', @ischar);
 parser.addParameter('localHookTemplate', '', @ischar);
 parser.addParameter('toolboxRoot', '', @ischar);
+parser.addParameter('toolboxSubfolder', '', @ischar);
 parser.addParameter('pathPlacement', 'append', @ischar);
 parser.addParameter('importance', '', @ischar);
 parser.addParameter('extra', '');
+parser.addParameter('java','',@ischar);
+parser.addParameter('cdToFolder', '', @ischar);
+parser.addParameter('printLocalHookOutput','', @ischar);
 parser.parse(varargin{:});
 
 % Let the parser do all the work

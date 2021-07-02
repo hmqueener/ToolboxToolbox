@@ -24,6 +24,10 @@ classdef TbIncludeStrategy < TbToolboxStrategy
     % 2016 benjamin.heasly@gmail.com
     
     methods
+         function obj = TbIncludeStrategy(persistentPrefs)
+            obj@TbToolboxStrategy(persistentPrefs);
+         end
+        
         function [command, status, message] = obtain(obj, record, toolboxRoot, toolboxPath)
             error('"include" record should have been resolved to another type.');
         end
@@ -35,7 +39,7 @@ classdef TbIncludeStrategy < TbToolboxStrategy
     
     methods (Static)
         % Iterate the given config, resolve and append new records as they come.
-        function [resolved, includes] = resolveIncludedConfigs(config, prefs)           
+        function [resolved, includes] = resolveIncludedConfigs(persistentPrefs, config, prefs)           
             if isempty(config)
                 resolved = [];
                 includes = [];
@@ -63,7 +67,7 @@ classdef TbIncludeStrategy < TbToolboxStrategy
                 
                 if ~isempty(url)
                     % append the included config so it can be resolved
-                    newConfig = tbReadConfig(prefs, 'configPath', url);
+                    newConfig = tbReadConfig(persistentPrefs, prefs, 'configPath', url);
                     if isempty(newConfig) || ~isstruct(newConfig) || ~isfield(newConfig, 'name')
                         continue;
                     end

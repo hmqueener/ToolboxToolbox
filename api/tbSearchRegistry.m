@@ -1,4 +1,4 @@
-function configPath = tbSearchRegistry(name, varargin)
+function configPath = tbSearchRegistry(name, persistentPrefs, varargin)
 % Search a registry for a configuration with the givne name.
 %
 % configPath = tbFetchRegistry(name) searches the default ToolboxHub
@@ -10,7 +10,7 @@ function configPath = tbSearchRegistry(name, varargin)
 %
 % 2016 benjamin.heasly@gmail.com
 
-prefs = tbParsePrefs(varargin{:});
+prefs = tbParsePrefs(persistentPrefs, varargin{:});
 
 parser = inputParser();
 parser.addRequired('name', @ischar);
@@ -18,7 +18,7 @@ parser.parse(name);
 name = parser.Results.name;
 
 %% Locate the folder that contains the registry.
-registryBasePath = tbLocateToolbox(prefs.registry, prefs);
+registryBasePath = tbLocateToolbox(prefs.registry, persistentPrefs, prefs);
 
 % only use first registry subfolder, if any
 if ischar(prefs.registry.subfolder)
@@ -30,9 +30,14 @@ else
 end
 
 %% Check for the named configuration.
-registryContents = dir(registryPath);
-configFiles = {registryContents.name};
-configIndex = find(strcmpi(configFiles, [name '.json']), 1, 'first');
+canonicalName = regexprep(name, '[\\/]', filesep);
+subfolders = fileparts(canonicalName);
+folderConfigFile = fullfile(registryPath, subfolders);
+registryContents = dir(folderConfigFile);
+localConfigFiles = {registryContents.name};
+configFiles = cellfun(@(configFile)fullfile(subfolders, configFile), localConfigFiles, 'Uniform', false);
+
+configIndex = find(strcmpi(configFiles, [canonicalName '.json']), 1, 'first');
 if isempty(configIndex)
     configPath = '';
 else
